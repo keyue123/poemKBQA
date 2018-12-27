@@ -2,13 +2,16 @@
 # 上手教程
 
 环境配置
+    
     Python版本为3.7
     jena和fuseki为3.9
 
 准备数据
+    
     sql文件已经提供，直接导入mysql中即可
 
 目录说明
+    
     demo文件夹包含的是完成整个问答demo流程所需要的脚本。
         data文件夹是结巴外部词典的数据
             dynasty.txt朝代
@@ -29,6 +32,7 @@
         wordHandle.py
             简单语言处理
             
+    
     poemData.sql
         诗词数据存放在mysql的结构及数据
     poem_demo_mapping.ttl
