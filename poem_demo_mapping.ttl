@@ -1,0 +1,111 @@
+@prefix map: <#> .
+@prefix db: <> .
+@prefix vocab: <vocab/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix jdbc: <http://d2rq.org/terms/jdbc/> .
+@prefix : <http://www.poem.com#> .											   
+
+map:database a d2rq:Database;
+	d2rq:jdbcDriver "com.mysql.jdbc.Driver";
+	d2rq:jdbcDSN "jdbc:mysql://127.0.0.1:3306/poem_kbqa_demo?serverTimezone=UTC";
+	d2rq:username "root";
+	d2rq:password "123456";
+	jdbc:autoReconnect "true";
+	jdbc:zeroDateTimeBehavior "convertToNull";
+	.
+
+# Table poem
+map:poem a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "poem/@@poem.poem_id@@";
+	d2rq:class :Poem;
+	d2rq:classDefinitionLabel "poem";
+	.
+map:poem_title a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:poem;
+	d2rq:property :poemName;
+	d2rq:propertyDefinitionLabel "poem title";
+	d2rq:column "poem.title";
+	.
+map:poem_content a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:poem;
+	d2rq:property :poemContent;
+	d2rq:propertyDefinitionLabel "poem content";
+	d2rq:column "poem.content";
+	.
+
+# Table poet
+map:poet a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "poet/@@poet.poet_id@@";
+	d2rq:class :Poet;
+	d2rq:classDefinitionLabel "poet";
+	.
+map:poet_author a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:poet;
+	d2rq:property :poetName;
+	d2rq:propertyDefinitionLabel "poet author";
+	d2rq:column "poet.author";
+	.
+map:poet_dynasty a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:poet;
+	d2rq:property :poetDynasty;
+	d2rq:propertyDefinitionLabel "poet dynasty";
+	d2rq:column "poet.dynasty";
+	.
+
+# Table poet_to_poem
+map:poet_to_poem__label a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:poet;
+	d2rq:property :poetProduction;
+	d2rq:refersToClassMap map:poem;										   
+	d2rq:join "poet_to_poem.poet_id => poet.poet_id";												 
+	d2rq:join "poet_to_poem.poem_id => poem.poem_id";					   
+	.
+
+# Table verse
+map:verse a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "verse/@@verse.id@@";
+	d2rq:class :Verse;
+	d2rq:classDefinitionLabel "verse";
+	.
+map:verse_verse_id a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:verse;
+	d2rq:property :verseId;
+	d2rq:propertyDefinitionLabel "verse verse_id";
+	d2rq:column "verse.verse_id";
+	d2rq:datatype xsd:integer;
+	.
+map:verse_sentence_id a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:verse;
+	d2rq:property :sentenceId;
+	d2rq:propertyDefinitionLabel "verse sentence_id";
+	d2rq:column "verse.sentence_id";
+	d2rq:datatype xsd:integer;
+	.
+map:verse_verse_len a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:verse;
+	d2rq:property :verseLen;
+	d2rq:propertyDefinitionLabel "verse verse_len";
+	d2rq:column "verse.verse_len";
+	d2rq:datatype xsd:integer;
+	.
+map:verse_verse_content a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:verse;
+	d2rq:property :verseContent;
+	d2rq:propertyDefinitionLabel "verse verse_content";
+	d2rq:column "verse.verse_content";
+	.
+
+# Table verse_to_poem
+map:verse_to_poem__label a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:verse;
+	d2rq:property :verseIn;
+	d2rq:refersToClassMap map:poem;											
+	d2rq:join "verse_to_poem.verse_id => verse.verse_id";									   
+	d2rq:join "verse_to_poem.poem_id => poem.poem_id";					   
+	.
